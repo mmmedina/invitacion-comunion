@@ -118,7 +118,7 @@ const CountdownCircles: React.FC<{ date: Date }> = ({ date }) => {
 };
 
 const IconLottieBubble: React.FC<{
-  anim?: any;
+  anim?: unknown;
   from: string;
   to: string;
   title: string;
@@ -152,20 +152,6 @@ const Divider: React.FC = () => (
 
 export default function Invitation() {
   const fecha = useMemo(() => new Date(INVITE.fechaISO), []);
-
-  // Función para renderizar horas con AM/PM más chico
-  const renderHora = (horaTexto: string) => {
-    // admite formatos "11:00 A.M." o "13:30 P.M."
-    const match = horaTexto.match(/^(\d{1,2}:\d{2})\s*([AP]\.?M\.?)$/i);
-    if (!match) return <span>{horaTexto}</span>;
-    const [, hhmm, ampm] = match;
-    return (
-      <span style={{ color: INVITE.colores.secundario }}>
-        {hhmm}
-        <span className="text-xs ml-1 opacity-60">{ampm.toUpperCase()}</span>
-      </span>
-    );
-  };
 
   return (
     <div
