@@ -29,25 +29,25 @@ const INVITE = {
   },
   ceremonia: {
     titulo: 'Ceremonia',
-    lugar: 'Iglesia San Fernando',
-    fechaTexto: '11:30 A.M.',
-    horaTexto: '11:00 A.M.',
+    lugar: 'Colegio San Fernando',
+    fechaTexto: '12:00 P.M.',
+    horaTexto: '12:00 P.M.',
     direccion: 'Gral.Ricchieri 1425 Hurlingham',
-    mapsQuery: 'Iglesia Sagrado Corazón, Hurlingham',
+    mapsQuery: 'Colegio San Fernando, Hurlingham',
   },
   celebracion: {
     titulo: 'Celebración',
     lugar: 'Salón Los Álamos',
-    fechaTexto: '13:30 P.M.',
-    horaTexto: '13:30 P.M.',
-    direccion: 'Valentin Alsina 456, Hurlingham',
+    fechaTexto: '14:30 P.M.',
+    horaTexto: '14:30 P.M.',
+    direccion: 'Av. Libertad 456, Hurlingham',
     mapsQuery: 'Salón Los Álamos, Av. Libertad 456, Buenos Aires',
   },
   dress: {
     titulo: 'Dress Code',
     texto: 'Lucí tu mejor Look',
   },
-  whatsapp: '54911XXXXXXX',
+  whatsapp: '5491164312028',
 };
 
 // ===== helpers =====
