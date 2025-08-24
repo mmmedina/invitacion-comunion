@@ -13,12 +13,12 @@ const INVITE = {
   duracionMin: 60,
   portada: '/Bautismo Chofi-31.jpg',
   colores: {
-    fondo: '#fff7f9', // rosa muy suave de fondo
-    papel: '#fdeef3', // rosa pálido para las secciones
-    primario: '#b56576', // rosado oscuro pastel (para textos principales)
-    secundario: '#6d597a', // violeta apagado pastel (para contraste)
-    rosa: '#f4a6b7', // para countdown circles
-    rosaBtn: '#ec4899', // rosa sólido botones
+    fondo: '#fff7f9',
+    papel: '#fdeef3',
+    primario: '#b56576',
+    secundario: '#6d597a',
+    rosa: '#f4a6b7',
+    rosaBtn: '#ec4899',
     rosaBtnHover: '#db2777',
     gradCerFrom: '#f9a8d4',
     gradCerTo: '#ec4899',
@@ -26,13 +26,18 @@ const INVITE = {
     gradCelTo: '#d946ef',
     gradDressFrom: '#c084fc',
     gradDressTo: '#7c3aed',
+    // pasteles súper suaves para los recuadros
+    pastelCer: 'rgba(255, 182, 193, 0.20)', // rosado muy tenue
+    pastelCel: 'rgba(173, 216, 230, 0.20)', // celeste muy tenue
+    pastelDress: 'rgba(221, 160, 221, 0.20)', // lavanda muy tenue
+    pastelBorder: 'rgba(0,0,0,0.06)',
   },
   ceremonia: {
     titulo: 'Ceremonia',
     lugar: 'Colegio San Fernando',
     fechaTexto: '12:00 P.M.',
     horaTexto: '12:00 P.M.',
-    direccion: 'Gral.Ricchieri 1425 Hurlingham',
+    direccion: 'Gral. Ricchieri 1425, Hurlingham',
     mapsQuery: 'Colegio San Fernando, Hurlingham',
   },
   celebracion: {
@@ -62,24 +67,30 @@ function useCountdown(target: Date) {
     );
     return () => clearInterval(id);
   }, [target]);
+
   const d = Math.floor(diff / (1000 * 60 * 60 * 24));
   const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
   const m = Math.floor((diff / (1000 * 60)) % 60);
-  return { d, h, m };
+  const s = Math.floor((diff / 1000) % 60);
+  return { d, h, m, s };
 }
 
 function downloadICS() {
   const start = new Date(INVITE.fechaISO);
   const end = new Date(start.getTime() + INVITE.duracionMin * 60000);
-  const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Invite//ES\nBEGIN:VEVENT\nUID:${crypto.randomUUID()}\nDTSTAMP:${
-    start.toISOString().replace(/[-:]/g, '').split('.')[0]
-  }Z\nDTSTART:${
-    start.toISOString().replace(/[-:]/g, '').split('.')[0]
-  }Z\nDTEND:${
-    end.toISOString().replace(/[-:]/g, '').split('.')[0]
-  }Z\nSUMMARY:Primera Comunión de ${INVITE.nombreNina}\nDESCRIPTION:${
-    INVITE.ceremonia.lugar
-  }\nLOCATION:${INVITE.ceremonia.lugar}\nEND:VEVENT\nEND:VCALENDAR`;
+  const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Invite//ES
+BEGIN:VEVENT
+UID:${crypto.randomUUID()}
+DTSTAMP:${start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTEND:${end.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+SUMMARY:Primera Comunión de ${INVITE.nombreNina}
+DESCRIPTION:${INVITE.ceremonia.lugar}
+LOCATION:${INVITE.ceremonia.lugar}
+END:VEVENT
+END:VCALENDAR`;
   const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
   const a = document.createElement('a');
   a.href = url;
@@ -90,25 +101,36 @@ function downloadICS() {
   URL.revokeObjectURL(url);
 }
 
+// Formatea "Martes 13 de Septiembre"
+function fechaLargaEs(date: Date) {
+  const s = date.toLocaleDateString('es-AR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+  return s.replace(/\b\p{L}/gu, (c) => c.toUpperCase());
+}
+
 const CountdownCircles: React.FC<{ date: Date }> = ({ date }) => {
-  const { d, h, m } = useCountdown(date);
+  const { d, h, m, s } = useCountdown(date);
   const items = [
     { v: d, label: 'Días' },
     { v: h, label: 'Horas' },
     { v: m, label: 'Minutos' },
+    { v: s, label: 'Segundos' },
   ];
   return (
-    <div className="flex justify-center gap-5 mt-6">
+    <div className="flex justify-center gap-3 mt-6 sm:gap-5 flex-nowrap">
       {items.map(({ v, label }) => (
         <div
           key={label}
-          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center shadow-md"
+          className="flex flex-col items-center justify-center w-16 h-16 rounded-full shadow-md sm:w-24 sm:h-24"
           style={{ backgroundColor: INVITE.colores.rosa }}
         >
-          <span className="text-2xl sm:text-3xl font-bold text-white">
+          <span className="text-xl font-bold text-white sm:text-3xl">
             {String(v).padStart(2, '0')}
           </span>
-          <span className="text-[10px] sm:text-xs uppercase tracking-wide text-white">
+          <span className="text-[9px] sm:text-xs uppercase tracking-wide text-white">
             {label}
           </span>
         </div>
@@ -117,41 +139,59 @@ const CountdownCircles: React.FC<{ date: Date }> = ({ date }) => {
   );
 };
 
-const IconLottieBubble: React.FC<{
-  anim?: unknown;
-  from: string;
-  to: string;
+// Tarjeta pastel para secciones con título ARRIBA e ícono más grande
+const SectionCard: React.FC<{
+  bg: string;
   title: string;
-}> = ({ anim, from, to, title }) => (
+  iconAnim: unknown;
+  gradFrom: string;
+  gradTo: string;
+  children: React.ReactNode;
+}> = ({ bg, title, iconAnim, gradFrom, gradTo, children }) => (
   <div
-    className="w-28 h-28 rounded-full overflow-hidden shadow-md mx-auto"
-    style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
-    title={title}
+    className="p-6 mt-10 text-center border sm:mt-12 rounded-2xl sm:p-8"
+    style={{ background: bg, borderColor: INVITE.colores.pastelBorder }}
   >
-    {anim ? (
-      <Lottie
-        animationData={anim}
-        loop
-        style={{ width: '100%', height: '100%' }}
-      />
-    ) : (
-      <div className="w-full h-full grid place-items-center text-white/80 text-xs px-3 text-center">
-        Animación {title}
-      </div>
-    )}
+    <h3
+      className="mb-4 text-5xl font-normal sm:text-6xl"
+      style={{ fontFamily: "'Great Vibes', cursive" }}
+    >
+      {title}
+    </h3>
+
+    <div
+      className="w-32 h-32 mx-auto overflow-hidden rounded-full shadow-md sm:w-36 sm:h-36"
+      style={{ background: `linear-gradient(135deg, ${gradFrom}, ${gradTo})` }}
+      title={title}
+    >
+      {iconAnim ? (
+        <Lottie
+          animationData={iconAnim}
+          loop
+          style={{ width: '100%', height: '100%' }}
+        />
+      ) : (
+        <div className="grid w-full h-full px-3 text-sm text-center place-items-center text-white/80">
+          Animación {title}
+        </div>
+      )}
+    </div>
+
+    <div className="mt-4">{children}</div>
   </div>
 );
 
 const Divider: React.FC = () => (
-  <div className="my-10 flex items-center justify-center">
-    <div className="h-px w-24 bg-gradient-to-r from-transparent via-rose-300/50 to-transparent" />
+  <div className="flex items-center justify-center my-10">
+    <div className="w-24 h-px bg-gradient-to-r from-transparent via-rose-300/50 to-transparent" />
     <div className="mx-2 w-1.5 h-1.5 rounded-full bg-rose-300/60" />
-    <div className="h-px w-24 bg-gradient-to-r from-transparent via-rose-300/50 to-transparent" />
+    <div className="w-24 h-px bg-gradient-to-r from-transparent via-rose-300/50 to-transparent" />
   </div>
 );
 
 export default function Invitation() {
   const fecha = useMemo(() => new Date(INVITE.fechaISO), []);
+  const fechaBonita = useMemo(() => fechaLargaEs(fecha), [fecha]);
 
   return (
     <div
@@ -162,7 +202,7 @@ export default function Invitation() {
       }}
     >
       <div className="grid lg:grid-cols-2 h-auto lg:h-screen max-w-[1200px] mx-auto bg-white shadow-xl">
-        {/* PORTADA */}
+        {/* PORTADA (sin cambios de tamaño) */}
         <section
           className="relative grid place-items-center h-[100svh] min-h-[560px] lg:min-h-0"
           style={{
@@ -170,9 +210,9 @@ export default function Invitation() {
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-black/15 to-black/55" />
-          <div className="relative z-10 text-center text-white px-6 py-8">
+          <div className="relative z-10 px-6 py-8 text-center text-white">
             <h1
-              className="text-6xl"
+              className="text-7xl"
               style={{ fontFamily: "'Great Vibes', cursive" }}
             >
               {INVITE.titulo}
@@ -184,8 +224,9 @@ export default function Invitation() {
               Sofía
             </p>
           </div>
+
           <div
-            className="absolute bottom-7 left-1/2 -translate-x-1/2 z-10 text-white/90 animate-bounce lg:hidden"
+            className="absolute z-10 -translate-x-1/2 bottom-7 left-1/2 text-white/90 animate-bounce lg:hidden"
             aria-hidden="true"
           >
             <svg
@@ -199,6 +240,7 @@ export default function Invitation() {
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </div>
+
           <div
             className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 rounded-t-[18px]"
             style={{ background: INVITE.colores.papel }}
@@ -214,69 +256,94 @@ export default function Invitation() {
             backgroundSize: '22px 22px',
           }}
         >
-          <div className="flex-1 overflow-y-auto px-6 py-6 lg:py-10">
-            <div className="max-w-[620px] mx-auto text-center">
-              <h2 className="text-3xl font-bold">¡Estás invitado!</h2>
+          <div className="flex-1 px-6 py-6 overflow-y-auto lg:py-10">
+            <div
+              className="max-w-[620px] mx-auto text-center text-[18px] sm:text-[19px] leading-relaxed"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
+            >
+              <h2
+                className="text-6xl font-normal sm:text-6xl"
+                style={{ fontFamily: "'Great Vibes', cursive" }}
+              >
+                ¡Estás invitado!
+              </h2>
+
               <p
-                className="mt-2 text-lg sm:text-xl font-medium"
+                className="mt-3 sm:mt-4 text-[18px] sm:text-[20px] font-medium"
                 style={{ color: INVITE.colores.secundario }}
               >
                 Me encantaría que seas parte de este momento tan especial para
                 mí. ¡Falta poco!
               </p>
 
-              <CountdownCircles date={fecha} />
+              {/* Encabezados del countdown (más grandes) */}
+              <div className="mt-8">
+                <div
+                  className="text-4xl sm:text-5xl"
+                  style={{ fontFamily: "'Great Vibes', cursive" }}
+                >
+                  Te espero el
+                </div>
+                <div className="mt-2 text-2xl font-semibold sm:text-3xl">
+                  {fechaBonita}
+                </div>
+                <div className="mt-4 text-lg sm:text-xl opacity-80">
+                  Solo faltan
+                </div>
 
-              <div className="mt-6">
+                <CountdownCircles date={fecha} />
+              </div>
+
+              {/* Botón (tamaño fijo) */}
+              <div className="mt-7">
                 <button
                   onClick={downloadICS}
-                  className="px-6 py-3 rounded-xl font-semibold text-white transition"
+                  className="px-6 py-3 text-base font-semibold text-white rounded-xl"
                   style={{ backgroundColor: INVITE.colores.rosaBtn }}
                 >
                   Agendar fecha
                 </button>
               </div>
+
               <Divider />
 
               {/* CEREMONIA */}
-              <div className="mt-12 text-center">
-                <IconLottieBubble
-                  anim={ceremoniaAnim}
-                  from={INVITE.colores.gradCerFrom}
-                  to={INVITE.colores.gradCerTo}
-                  title="Ceremonia"
-                />
-                <h3 className="mt-3 text-2xl font-bold">
-                  {INVITE.ceremonia.titulo}
-                </h3>
-                <p className="mt-2 text-lg">{INVITE.ceremonia.lugar}</p>
-                <p className="mt-1">{INVITE.celebracion.direccion}</p>
-                <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
+              <SectionCard
+                bg={INVITE.colores.pastelCer}
+                title={INVITE.ceremonia.titulo}
+                iconAnim={ceremoniaAnim}
+                gradFrom={INVITE.colores.gradCerFrom}
+                gradTo={INVITE.colores.gradCerTo}
+              >
+                <p className="mt-2 text-lg sm:text-xl">
+                  {INVITE.ceremonia.lugar}
+                </p>
+                <p className="mt-1">{INVITE.ceremonia.direccion}</p>
+                <p className="mt-1">{INVITE.ceremonia.fechaTexto}</p>
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                     INVITE.ceremonia.mapsQuery
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 inline-block px-6 py-3 rounded-xl font-semibold text-white"
+                  className="inline-block px-6 py-3 mt-4 text-base font-semibold text-white rounded-xl"
                   style={{ backgroundColor: INVITE.colores.rosaBtn }}
                 >
                   Ver Mapa
                 </a>
-              </div>
-              <Divider />
+              </SectionCard>
+
               {/* CELEBRACIÓN */}
-              <div className="mt-12 text-center">
-                <IconLottieBubble
-                  anim={celebracionAnim}
-                  from={INVITE.colores.gradCelFrom}
-                  to={INVITE.colores.gradCelTo}
-                  title="Celebración"
-                />
-                <h3 className="mt-3 text-2xl font-bold">
-                  {INVITE.celebracion.titulo}
-                </h3>
-                <p className="mt-2 text-lg">{INVITE.celebracion.lugar}</p>
+              <SectionCard
+                bg={INVITE.colores.pastelCel}
+                title={INVITE.celebracion.titulo}
+                iconAnim={celebracionAnim}
+                gradFrom={INVITE.colores.gradCelFrom}
+                gradTo={INVITE.colores.gradCelTo}
+              >
+                <p className="mt-2 text-lg sm:text-xl">
+                  {INVITE.celebracion.lugar}
+                </p>
                 <p className="mt-1">{INVITE.celebracion.direccion}</p>
                 <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
                 <a
@@ -285,29 +352,27 @@ export default function Invitation() {
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 inline-block px-6 py-3 rounded-xl font-semibold text-white"
+                  className="inline-block px-6 py-3 mt-4 text-base font-semibold text-white rounded-xl"
                   style={{ backgroundColor: INVITE.colores.rosaBtn }}
                 >
                   Ver Mapa
                 </a>
-              </div>
-              <Divider />
+              </SectionCard>
+
               {/* DRESS CODE */}
-              <div className="mt-12 text-center">
-                <IconLottieBubble
-                  anim={dresscodeAnim}
-                  from={INVITE.colores.gradDressFrom}
-                  to={INVITE.colores.gradDressTo}
-                  title="Dress Code"
-                />
-                <h3 className="mt-3 text-2xl font-bold">
-                  {INVITE.dress.titulo}
-                </h3>
+              <SectionCard
+                bg={INVITE.colores.pastelDress}
+                title={INVITE.dress.titulo}
+                iconAnim={dresscodeAnim}
+                gradFrom={INVITE.colores.gradDressFrom}
+                gradTo={INVITE.colores.gradDressTo}
+              >
                 <p className="mt-2">{INVITE.dress.texto}</p>
-              </div>
+              </SectionCard>
+
               {/* SECCIÓN FINAL EN NEGATIVO */}
               <section
-                className="mt-16 text-center py-12 rounded-2xl shadow-md"
+                className="py-12 mt-16 text-center shadow-md rounded-2xl"
                 style={{
                   backgroundColor: 'rgba(181, 101, 118, 0.85)',
                   color: INVITE.colores.fondo,
@@ -316,11 +381,15 @@ export default function Invitation() {
                   backgroundSize: '18px 18px',
                 }}
               >
-                <h3 className="text-4xl font-semibold">¡Te espero!</h3>
+                <h3
+                  className="text-5xl font-normal sm:text-6xl"
+                  style={{ fontFamily: "'Great Vibes', cursive" }}
+                >
+                  ¡Te espero!
+                </h3>
                 <p className="mt-2 opacity-90">
                   Confirmá tu asistencia por WhatsApp
                 </p>
-
                 <a
                   href={`https://wa.me/${
                     INVITE.whatsapp
@@ -329,13 +398,12 @@ export default function Invitation() {
                   )}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-6 inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-semibold transition"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3 mt-6 text-base font-semibold transition rounded-xl"
                   style={{
-                    backgroundColor: INVITE.colores.fondo, // botón clarito
-                    color: INVITE.colores.primario, // texto en color fuerte
+                    backgroundColor: INVITE.colores.fondo,
+                    color: INVITE.colores.primario,
                   }}
                 >
-                  {/* Ícono WhatsApp */}
                   <svg
                     aria-hidden="true"
                     width="18"
