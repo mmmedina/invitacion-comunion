@@ -425,11 +425,11 @@ export default function Invitation() {
                   transformOrigin: 'center',
                 }}
               >
+                <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
                 <p className="mt-2 text-lg sm:text-xl">
                   {INVITE.celebracion.lugar}
                 </p>
                 <p className="mt-1">{INVITE.celebracion.direccion}</p>
-                <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                     INVITE.celebracion.mapsQuery
