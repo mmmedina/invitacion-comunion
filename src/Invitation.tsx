@@ -38,15 +38,17 @@ const INVITE = {
     fechaTexto: '12:00 P.M.',
     horaTexto: '12:00 P.M.',
     direccion: 'Gral. Ricchieri 1425, Hurlingham',
-    mapsQuery: 'Colegio San Fernando, Hurlingham',
+    mapsQuery:
+      'Colegio San Fernando, Tte. Gral. Pablo Ricchieri 1425, B1686 Hurlingham, Provincia de Buenos Aires',
   },
   celebracion: {
     titulo: 'Celebración',
-    lugar: 'Salón Los Álamos',
+    lugar: "Jano's Puerto Madero",
     fechaTexto: '14:30 P.M.',
     horaTexto: '14:30 P.M.',
     direccion: 'Av. Libertad 456, Hurlingham',
-    mapsQuery: 'Salón Los Álamos, Av. Libertad 456, Buenos Aires',
+    mapsQuery:
+      "Jano's Puerto Madero, Olga Cossettini 1031, C1107 Cdad. Autónoma de Buenos Aires",
   },
   dress: {
     titulo: 'Dress Code',
@@ -75,6 +77,30 @@ function useCountdown(target: Date) {
   return { d, h, m, s };
 }
 
+// Google Calendar (Android & web)
+function openGoogleCalendar() {
+  const start = new Date(INVITE.fechaISO);
+  const end = new Date(start.getTime() + INVITE.duracionMin * 60000);
+  const fmt = (d: Date) =>
+    d
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .replace(/\.\d{3}Z$/, 'Z'); // yyyymmddThhmmssZ
+
+  const url =
+    `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+    `&text=${encodeURIComponent(`Primera Comunión de ${INVITE.nombreNina}`)}` +
+    `&dates=${fmt(start)}/${fmt(end)}` +
+    `&details=${encodeURIComponent(INVITE.ceremonia.lugar)}` +
+    `&location=${encodeURIComponent(
+      `${INVITE.ceremonia.lugar}, ${INVITE.ceremonia.direccion}`
+    )}` +
+    `&sf=true&output=xml`;
+
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// Archivo ICS (iOS & fallback)
 function downloadICS() {
   const start = new Date(INVITE.fechaISO);
   const end = new Date(start.getTime() + INVITE.duracionMin * 60000);
@@ -91,6 +117,7 @@ DESCRIPTION:${INVITE.ceremonia.lugar}
 LOCATION:${INVITE.ceremonia.lugar}
 END:VEVENT
 END:VCALENDAR`;
+
   const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
   const a = document.createElement('a');
   a.href = url;
@@ -99,6 +126,26 @@ END:VCALENDAR`;
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
+}
+
+// Detecta dispositivo y abre el calendario nativo
+function addToCalendar() {
+  const ua =
+    navigator.userAgent ||
+    (navigator as any).vendor ||
+    (window as any).opera ||
+    '';
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+  if (isAndroid) {
+    openGoogleCalendar();
+  } else if (isIOS) {
+    downloadICS(); // iOS dispara Calendario nativo con .ics
+  } else {
+    // Escritorio/otros: intentá Google Calendar
+    openGoogleCalendar();
+  }
 }
 
 // Formatea "Martes 13 de Septiembre"
@@ -212,7 +259,7 @@ export default function Invitation() {
           <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-black/15 to-black/55" />
           <div className="relative z-10 px-6 py-8 text-center text-white">
             <h1
-              className="text-7xl"
+              className="text-6xl"
               style={{ fontFamily: "'Great Vibes', cursive" }}
             >
               {INVITE.titulo}
@@ -257,12 +304,13 @@ export default function Invitation() {
           }}
         >
           <div className="flex-1 px-6 py-6 overflow-y-auto lg:py-10">
+            {/* Contenido con ancho limitado */}
             <div
               className="max-w-[620px] mx-auto text-center text-[18px] sm:text-[19px] leading-relaxed"
               style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               <h2
-                className="text-6xl font-normal sm:text-6xl"
+                className="text-5xl font-normal sm:text-6xl"
                 style={{ fontFamily: "'Great Vibes', cursive" }}
               >
                 ¡Estás invitado!
@@ -294,10 +342,10 @@ export default function Invitation() {
                 <CountdownCircles date={fecha} />
               </div>
 
-              {/* Botón (tamaño fijo) */}
+              {/* Botón (abre calendario del teléfono) */}
               <div className="mt-7">
                 <button
-                  onClick={downloadICS}
+                  onClick={addToCalendar}
                   className="px-6 py-3 text-base font-semibold text-white rounded-xl"
                   style={{ backgroundColor: INVITE.colores.rosaBtn }}
                 >
@@ -369,54 +417,55 @@ export default function Invitation() {
               >
                 <p className="mt-2">{INVITE.dress.texto}</p>
               </SectionCard>
+            </div>
 
-              {/* SECCIÓN FINAL EN NEGATIVO */}
-              <section
-                className="py-12 mt-16 text-center shadow-md rounded-2xl"
+            {/* ==== SECCIÓN FINAL EN NEGATIVO FULL-BLEED ==== */}
+            <section
+              className="mt-16 text-center py-12 px-6 rounded-none shadow-none mx-[-1.5rem]"
+              style={{
+                backgroundColor: 'rgba(181, 101, 118, 0.85)',
+                color: INVITE.colores.fondo,
+                backgroundImage:
+                  'radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)',
+                backgroundSize: '18px 18px',
+              }}
+            >
+              <h3
+                className="text-5xl font-normal sm:text-6xl"
+                style={{ fontFamily: "'Great Vibes', cursive" }}
+              >
+                ¡Te espero!
+              </h3>
+              <p className="mt-2 opacity-90">
+                Confirmá tu asistencia por WhatsApp
+              </p>
+              <a
+                href={`https://wa.me/${
+                  INVITE.whatsapp
+                }?text=${encodeURIComponent(
+                  `Confirmo asistencia a la Primera Comunión de ${INVITE.nombreNina}`
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3 mt-6 text-base font-semibold transition rounded-xl"
                 style={{
-                  backgroundColor: 'rgba(181, 101, 118, 0.85)',
-                  color: INVITE.colores.fondo,
-                  backgroundImage:
-                    'radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)',
-                  backgroundSize: '18px 18px',
+                  backgroundColor: INVITE.colores.fondo,
+                  color: INVITE.colores.primario,
                 }}
               >
-                <h3
-                  className="text-5xl font-normal sm:text-6xl"
-                  style={{ fontFamily: "'Great Vibes', cursive" }}
+                <svg
+                  aria-hidden="true"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
                 >
-                  ¡Te espero!
-                </h3>
-                <p className="mt-2 opacity-90">
-                  Confirmá tu asistencia por WhatsApp
-                </p>
-                <a
-                  href={`https://wa.me/${
-                    INVITE.whatsapp
-                  }?text=${encodeURIComponent(
-                    `Confirmo asistencia a la Primera Comunión de ${INVITE.nombreNina}`
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-3 mt-6 text-base font-semibold transition rounded-xl"
-                  style={{
-                    backgroundColor: INVITE.colores.fondo,
-                    color: INVITE.colores.primario,
-                  }}
-                >
-                  <svg
-                    aria-hidden="true"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M20.52 3.48A11.94 11.94 0 0 0 12.06 0C5.5.04.18 5.36.22 11.92c.02 2.09.56 4.1 1.58 5.89L0 24l6.35-1.66a11.86 11.86 0 0 0 5.71 1.46h.05c6.56-.03 11.88-5.36 11.92-11.92a11.9 11.9 0 0 0-3.53-8.4ZM12.1 21.33h-.04a9.8 9.8 0 0 1-4.99-1.36l-.36-.21-3.77.99 1.01-3.67-.24-.38a9.77 9.77 0 0 1-1.5-5.19C2.17 6.5 6.55 2.12 12.07 2.1h.04c5.5 0 9.97 4.47 9.95 9.97-.02 5.5-4.49 9.96-9.97 9.96Zm5.68-7.35c-.31-.16-1.84-.91-2.12-1.02-.28-.1-.49-.16-.7.16-.2.31-.8 1.02-.98 1.22-.18.2-.36.23-.67.08-.31-.16-1.31-.48-2.5-1.53-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.48.13-.64.14-.14.31-.36.46-.54.15-.18.2-.31.31-.51.1-.2.05-.38-.03-.54-.08-.16-.7-1.68-.96-2.3-.25-.6-.5-.52-.7-.53l-.6-.01c-.2 0-.54.08-.82.38-.28.31-1.08 1.06-1.08 2.6s1.11 3.02 1.26 3.23c.16.2 2.19 3.34 5.31 4.68.74.32 1.33.51 1.78.65.75.24 1.43.21 1.97.13.6-.09 1.84-.75 2.1-1.47.26-.72.26-1.35.18-1.49-.08-.14-.28-.23-.59-.39Z" />
-                  </svg>
-                  Confirmar por WhatsApp
-                </a>
-              </section>
-            </div>
+                  <path d="M20.52 3.48A11.94 11.94 0 0 0 12.06 0C5.5.04.18 5.36.22 11.92c.02 2.09.56 4.1 1.58 5.89L0 24l6.35-1.66a11.86 11.86 0 0 0 5.71 1.46h.05c6.56-.03 11.88-5.36 11.92-11.92a11.9 11.9 0 0 0-3.53-8.4ZM12.1 21.33h-.04a9.8 9.8 0 0 1-4.99-1.36l-.36-.21-3.77.99 1.01-3.67-.24-.38a9.77 9.77 0 0 1-1.5-5.19C2.17 6.5 6.55 2.12 12.07 2.1h.04c5.5 0 9.97 4.47 9.95 9.97-.02 5.5-4.49 9.96-9.97 9.96Zm5.68-7.35c-.31-.16-1.84-.91-2.12-1.02-.28-.1-.49-.16-.7.16-.2.31-.8 1.02-.98 1.22-.18.2-.36.23-.67.08-.31-.16-1.31-.48-2.5-1.53-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.48.13-.64.14-.14.31-.36.46-.54.15-.18.2-.31.31-.51.1-.2.05-.38-.03-.54-.08-.16-.7-1.68-.96-2.3-.25-.6-.5-.52-.7-.53l-.6-.01c-.2 0-.54.08-.82.38-.28.31-1.08 1.06-1.08 2.6s1.11 3.02 1.26 3.23c.16.2 2.19 3.34 5.31 4.68.74.32 1.33.51 1.78.65.75.24 1.43.21 1.97.13.6-.09 1.84-.75 2.1-1.47.26-.72.26-1.35.18-1.49-.08-.14-.28-.23-.59-.39Z" />
+                </svg>
+                Confirmar por WhatsApp
+              </a>
+            </section>
+            {/* ==== /FULL-BLEED ==== */}
           </div>
         </section>
       </div>
