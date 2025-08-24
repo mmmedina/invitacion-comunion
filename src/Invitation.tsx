@@ -2,14 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Lottie from 'lottie-react';
 
 import ceremoniaAnim from '../public/lotties/church.json';
-import celebracionAnim from '../public/lotties/confetti.json';
+import celebracionAnim from '../public/lotties/confetti2.json';
 import dresscodeAnim from '../public/lotties/dress.json';
 
 // === CONFIG ===
 const INVITE = {
   nombreNina: 'Sofía Paz',
   titulo: 'Mi Primera Comunión',
-  fechaISO: '2025-09-21T11:00:00-03:00',
+  fechaISO: '2025-09-13T12:00:00-03:00',
   duracionMin: 60,
   portada: '/Bautismo Chofi-31.jpg',
   colores: {
@@ -167,13 +167,26 @@ function addToCalendar() {
 }
 
 // Formatea "Martes 13 de Septiembre"
-function fechaLargaEs(date: Date) {
-  const s = date.toLocaleDateString('es-AR', {
+function fechaLargaEs(date: Date, capitalizarMes = true) {
+  const parts = new Intl.DateTimeFormat('es-AR', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-  });
-  return s.replace(/\b\p{L}/gu, (c) => c.toUpperCase());
+  }).formatToParts(date);
+
+  const capPrimera = (s: string) => {
+    const [first, ...rest] = [...s]; // respeta tildes/emoji
+    return (first ? first.toLocaleUpperCase('es-AR') : '') + rest.join('');
+  };
+
+  return parts
+    .map((p) => {
+      if (p.type === 'weekday') return capPrimera(p.value); // Sábado
+      if (p.type === 'month')
+        return capitalizarMes ? capPrimera(p.value) : p.value; // Septiembre o septiembre
+      return p.value; // incluye el " de " tal cual
+    })
+    .join('');
 }
 
 const CountdownCircles: React.FC<{ date: Date }> = ({ date }) => {
@@ -205,6 +218,7 @@ const CountdownCircles: React.FC<{ date: Date }> = ({ date }) => {
 };
 
 // Tarjeta pastel para secciones con título ARRIBA e ícono más grande
+// Tarjeta pastel para secciones con título ARRIBA e ícono centrado/ajustable
 const SectionCard: React.FC<{
   bg: string;
   title: string;
@@ -212,7 +226,20 @@ const SectionCard: React.FC<{
   gradFrom: string;
   gradTo: string;
   children: React.ReactNode;
-}> = ({ bg, title, iconAnim, gradFrom, gradTo, children }) => (
+  iconScale?: number; // 0.0 - 1.0 (por defecto 0.86)
+  iconOffsetX?: number; // en fracción del ancho, ej -0.05 = -5%
+  iconOffsetY?: number; // en fracción del alto,  ej  0.04 =  4%
+}> = ({
+  bg,
+  title,
+  iconAnim,
+  gradFrom,
+  gradTo,
+  children,
+  iconScale = 0.86,
+  iconOffsetX = 0,
+  iconOffsetY = 0,
+}) => (
   <div
     className="p-6 mt-10 text-center border sm:mt-12 rounded-2xl sm:p-8"
     style={{ background: bg, borderColor: INVITE.colores.pastelBorder }}
@@ -229,17 +256,26 @@ const SectionCard: React.FC<{
       style={{ background: `linear-gradient(135deg, ${gradFrom}, ${gradTo})` }}
       title={title}
     >
-      {iconAnim ? (
-        <Lottie
-          animationData={iconAnim}
-          loop
-          style={{ width: '100%', height: '100%' }}
-        />
-      ) : (
-        <div className="grid w-full h-full px-3 text-sm text-center place-items-center text-white/80">
-          Animación {title}
-        </div>
-      )}
+      <div className="grid w-full h-full p-2 place-items-center sm:p-3">
+        {iconAnim ? (
+          <Lottie
+            animationData={iconAnim}
+            loop
+            rendererSettings={{ preserveAspectRatio: 'xMidYMid meet' }}
+            style={{
+              width: `${iconScale * 100}%`,
+              height: `${iconScale * 100}%`,
+              transform: `translate(${iconOffsetX * 100}%, ${
+                iconOffsetY * 100
+              }%)`,
+            }}
+          />
+        ) : (
+          <div className="grid w-full h-full px-3 text-sm text-center place-items-center text-white/80">
+            Animación {title}
+          </div>
+        )}
+      </div>
     </div>
 
     <div className="mt-4">{children}</div>
@@ -381,11 +417,12 @@ export default function Invitation() {
                 gradFrom={INVITE.colores.gradCerFrom}
                 gradTo={INVITE.colores.gradCerTo}
               >
+                <p className="mt-1">{INVITE.ceremonia.fechaTexto}</p>
                 <p className="mt-2 text-lg sm:text-xl">
                   {INVITE.ceremonia.lugar}
                 </p>
                 <p className="mt-1">{INVITE.ceremonia.direccion}</p>
-                <p className="mt-1">{INVITE.ceremonia.fechaTexto}</p>
+
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                     INVITE.ceremonia.mapsQuery
@@ -407,11 +444,12 @@ export default function Invitation() {
                 gradFrom={INVITE.colores.gradCelFrom}
                 gradTo={INVITE.colores.gradCelTo}
               >
+                <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
                 <p className="mt-2 text-lg sm:text-xl">
                   {INVITE.celebracion.lugar}
                 </p>
                 <p className="mt-1">{INVITE.celebracion.direccion}</p>
-                <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
+
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                     INVITE.celebracion.mapsQuery
@@ -461,7 +499,7 @@ export default function Invitation() {
                 href={`https://wa.me/${
                   INVITE.whatsapp
                 }?text=${encodeURIComponent(
-                  `Confirmo asistencia a la Primera Comunión de ${INVITE.nombreNina}`
+                  'Hola Sofi! Confirmo mi asistencia a tu Comunión!. Gracias por la invitación!.'
                 )}`}
                 target="_blank"
                 rel="noreferrer"
