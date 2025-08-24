@@ -78,6 +78,7 @@ function useCountdown(target: Date) {
 }
 
 // Google Calendar (Android & web)
+// Google Calendar (Android & web)
 function openGoogleCalendar() {
   const start = new Date(INVITE.fechaISO);
   const end = new Date(start.getTime() + INVITE.duracionMin * 60000);
@@ -100,7 +101,14 @@ function openGoogleCalendar() {
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-// Archivo ICS (iOS & fallback)
+// Abre el .ics hospedado usando webcal:// (iOS abre Calendario nativo)
+function openAppleCalendarWebcal() {
+  const host = window.location.host; // incluye puerto si hay
+  const webcalUrl = `webcal://${host}/evento.ics`; // el .ics que pusiste en /public
+  window.location.href = webcalUrl;
+}
+
+// Fallback .ics (descarga) para casos raros
 function downloadICS() {
   const start = new Date(INVITE.fechaISO);
   const end = new Date(start.getTime() + INVITE.duracionMin * 60000);
@@ -135,16 +143,26 @@ function addToCalendar() {
     (navigator as any).vendor ||
     (window as any).opera ||
     '';
-  const isAndroid = /Android/i.test(ua);
   const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+
+  if (isIOS) {
+    // iOS: abrir Calendario nativo con webcal://
+    openAppleCalendarWebcal();
+    return;
+  }
 
   if (isAndroid) {
+    // Android: Google Calendar
     openGoogleCalendar();
-  } else if (isIOS) {
-    downloadICS(); // iOS dispara Calendario nativo con .ics
-  } else {
-    // Escritorio/otros: intentá Google Calendar
+    return;
+  }
+
+  // Escritorio/otros: intentar GCal y, si no, .ics
+  try {
     openGoogleCalendar();
+  } catch {
+    downloadICS();
   }
 }
 
@@ -462,7 +480,7 @@ export default function Invitation() {
                 >
                   <path d="M20.52 3.48A11.94 11.94 0 0 0 12.06 0C5.5.04.18 5.36.22 11.92c.02 2.09.56 4.1 1.58 5.89L0 24l6.35-1.66a11.86 11.86 0 0 0 5.71 1.46h.05c6.56-.03 11.88-5.36 11.92-11.92a11.9 11.9 0 0 0-3.53-8.4ZM12.1 21.33h-.04a9.8 9.8 0 0 1-4.99-1.36l-.36-.21-3.77.99 1.01-3.67-.24-.38a9.77 9.77 0 0 1-1.5-5.19C2.17 6.5 6.55 2.12 12.07 2.1h.04c5.5 0 9.97 4.47 9.95 9.97-.02 5.5-4.49 9.96-9.97 9.96Zm5.68-7.35c-.31-.16-1.84-.91-2.12-1.02-.28-.1-.49-.16-.7.16-.2.31-.8 1.02-.98 1.22-.18.2-.36.23-.67.08-.31-.16-1.31-.48-2.5-1.53-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.48.13-.64.14-.14.31-.36.46-.54.15-.18.2-.31.31-.51.1-.2.05-.38-.03-.54-.08-.16-.7-1.68-.96-2.3-.25-.6-.5-.52-.7-.53l-.6-.01c-.2 0-.54.08-.82.38-.28.31-1.08 1.06-1.08 2.6s1.11 3.02 1.26 3.23c.16.2 2.19 3.34 5.31 4.68.74.32 1.33.51 1.78.65.75.24 1.43.21 1.97.13.6-.09 1.84-.75 2.1-1.47.26-.72.26-1.35.18-1.49-.08-.14-.28-.23-.59-.39Z" />
                 </svg>
-                Confirmar por WhatsApp
+                Confirmar Asistencia
               </a>
             </section>
             {/* ==== /FULL-BLEED ==== */}
