@@ -217,8 +217,6 @@ const CountdownCircles: React.FC<{ date: Date }> = ({ date }) => {
   );
 };
 
-// Tarjeta pastel para secciones con título ARRIBA e ícono más grande
-// Tarjeta pastel para secciones con título ARRIBA e ícono centrado/ajustable
 const SectionCard: React.FC<{
   bg: string;
   title: string;
@@ -226,20 +224,8 @@ const SectionCard: React.FC<{
   gradFrom: string;
   gradTo: string;
   children: React.ReactNode;
-  iconScale?: number; // 0.0 - 1.0 (por defecto 0.86)
-  iconOffsetX?: number; // en fracción del ancho, ej -0.05 = -5%
-  iconOffsetY?: number; // en fracción del alto,  ej  0.04 =  4%
-}> = ({
-  bg,
-  title,
-  iconAnim,
-  gradFrom,
-  gradTo,
-  children,
-  iconScale = 0.86,
-  iconOffsetX = 0,
-  iconOffsetY = 0,
-}) => (
+  iconStyle?: React.CSSProperties; // <-- nuevo (opcional)
+}> = ({ bg, title, iconAnim, gradFrom, gradTo, children, iconStyle }) => (
   <div
     className="p-6 mt-10 text-center border sm:mt-12 rounded-2xl sm:p-8"
     style={{ background: bg, borderColor: INVITE.colores.pastelBorder }}
@@ -256,26 +242,17 @@ const SectionCard: React.FC<{
       style={{ background: `linear-gradient(135deg, ${gradFrom}, ${gradTo})` }}
       title={title}
     >
-      <div className="grid w-full h-full p-2 place-items-center sm:p-3">
-        {iconAnim ? (
-          <Lottie
-            animationData={iconAnim}
-            loop
-            rendererSettings={{ preserveAspectRatio: 'xMidYMid meet' }}
-            style={{
-              width: `${iconScale * 100}%`,
-              height: `${iconScale * 100}%`,
-              transform: `translate(${iconOffsetX * 100}%, ${
-                iconOffsetY * 100
-              }%)`,
-            }}
-          />
-        ) : (
-          <div className="grid w-full h-full px-3 text-sm text-center place-items-center text-white/80">
-            Animación {title}
-          </div>
-        )}
-      </div>
+      {iconAnim ? (
+        <Lottie
+          animationData={iconAnim}
+          loop
+          style={{ width: '100%', height: '100%', ...iconStyle }} // <-- se aplica sólo si lo pasás
+        />
+      ) : (
+        <div className="grid w-full h-full px-3 text-sm text-center place-items-center text-white/80">
+          Animación {title}
+        </div>
+      )}
     </div>
 
     <div className="mt-4">{children}</div>
@@ -443,13 +420,16 @@ export default function Invitation() {
                 iconAnim={celebracionAnim}
                 gradFrom={INVITE.colores.gradCelFrom}
                 gradTo={INVITE.colores.gradCelTo}
+                iconStyle={{
+                  transform: 'translateY(-6%) scale(0.86)', // sube un poquito y reduce apenas
+                  transformOrigin: 'center',
+                }}
               >
-                <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
                 <p className="mt-2 text-lg sm:text-xl">
                   {INVITE.celebracion.lugar}
                 </p>
                 <p className="mt-1">{INVITE.celebracion.direccion}</p>
-
+                <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                     INVITE.celebracion.mapsQuery
