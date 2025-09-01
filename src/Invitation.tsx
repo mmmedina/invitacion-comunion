@@ -223,7 +223,8 @@ const SectionCard: React.FC<{
   iconStyle?: React.CSSProperties; // <-- nuevo (opcional)
 }> = ({ bg, title, iconAnim, gradFrom, gradTo, children, iconStyle }) => (
   <div
-    className="p-6 mt-10 text-center border sm:mt-12 rounded-2xl sm:p-8"
+    className="p-6 mt-10 text-center border sm:mt-12 rounded-2xl sm:p-8
+             transition-all duration-300 lg:hover:shadow-lg lg:hover:-translate-y-0.5"
     style={{ background: bg, borderColor: INVITE.colores.pastelBorder }}
   >
     <h3
@@ -324,10 +325,11 @@ export default function Invitation() {
         color: INVITE.colores.primario,
       }}
     >
-      <div className="grid lg:grid-cols-2 h-auto lg:h-screen max-w-[1200px] mx-auto bg-white shadow-xl">
+      <div className="grid lg:grid-cols-2 h-auto lg:h-screen max-w-[1200px] mx-auto bg-white shadow-xl lg:rounded-2xl">
         {/* PORTADA (sin cambios de tamaño) */}
         <section
-          className="relative grid place-items-center h-[100svh] min-h-[560px] lg:min-h-0"
+          className="relative grid place-items-center h-[100svh] min-h-[560px] lg:min-h-0
+             lg:sticky lg:top-0 lg:h-screen lg:rounded-l-2xl overflow-hidden"
           style={{
             background: `url('${INVITE.portada}') center/cover no-repeat`,
           }}
@@ -372,17 +374,18 @@ export default function Invitation() {
 
         {/* CONTENIDO */}
         <section
-          className="flex flex-col h-full"
+          className="flex flex-col h-full lg:overflow-y-auto lg:rounded-r-2xl"
           style={{
             backgroundColor: INVITE.colores.papel,
             backgroundImage: 'radial-gradient(#f5a9b8 1px, transparent 1px)',
             backgroundSize: '22px 22px',
           }}
         >
-          <div className="flex-1 px-6 py-6 overflow-y-auto lg:py-10">
+          <div className="flex-1 px-6 py-6 lg:px-10 lg:py-10">
             {/* Contenido con ancho limitado */}
             <div
-              className="max-w-[620px] mx-auto text-center text-[18px] sm:text-[19px] leading-relaxed"
+              className="max-w-[620px] mx-auto text-center
+             text-[18px] sm:text-[19px] lg:text-[20px] leading-relaxed"
               style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               <h2
@@ -454,7 +457,8 @@ export default function Invitation() {
                     )}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-block px-6 py-3 mt-4 text-base font-semibold text-white rounded-xl"
+                    className="inline-block px-6 py-3 mt-4 text-base font-semibold text-white rounded-xl
+           transition-transform duration-200 lg:hover:-translate-y-[1px]"
                     style={{ backgroundColor: INVITE.colores.rosaBtn }}
                   >
                     Ver Mapa
