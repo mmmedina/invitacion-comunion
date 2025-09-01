@@ -422,7 +422,9 @@ export default function Invitation() {
                 }}
               >
                 <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
-                <p className="mt-1">{INVITE.celebracion.direccion}</p>
+                <p className="mt-1 whitespace-nowrap">
+                  {INVITE.celebracion.direccion}
+                </p>
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                     INVITE.celebracion.mapsQuery
