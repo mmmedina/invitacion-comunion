@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Lottie from 'lottie-react';
 
 import ceremoniaAnim from '../public/lotties/church.json';
@@ -269,50 +269,6 @@ const prefersReducedMotion = () =>
   window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const Reveal: React.FC<{ delay?: number; children: React.ReactNode }> = ({
-  delay = 0,
-  children,
-}) => {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [show, setShow] = useState(prefersReducedMotion());
-
-  useEffect(() => {
-    if (prefersReducedMotion()) return setShow(true);
-
-    const el = ref.current;
-    if (!el) return;
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const [e] = entries;
-        if (e.isIntersecting) {
-          setShow(true);
-          obs.unobserve(el); // aparece una vez
-        }
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
-    );
-
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={`transition-all duration-700 ease-out will-change-transform
-                  ${
-                    show
-                      ? 'opacity-100 translate-y-0'
-                      : 'opacity-0 translate-y-6'
-                  }`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </div>
-  );
-};
-
 export default function Invitation() {
   const fecha = useMemo(() => new Date(INVITE.fechaISO), []);
   const fechaBonita = useMemo(() => fechaLargaEs(fecha), [fecha]);
@@ -435,78 +391,72 @@ export default function Invitation() {
               <Divider />
 
               {/* CEREMONIA */}
-              <Reveal delay={30}>
-                <SectionCard
-                  bg={INVITE.colores.pastelCer}
-                  title={INVITE.ceremonia.titulo}
-                  iconAnim={ceremoniaAnim}
-                  gradFrom={INVITE.colores.gradCerFrom}
-                  gradTo={INVITE.colores.gradCerTo}
-                >
-                  <p className="mt-1">{INVITE.ceremonia.fechaTexto}</p>
-                  <p className="mt-2 text-lg sm:text-xl">
-                    {INVITE.ceremonia.lugar}
-                  </p>
-                  <p className="mt-1 whitespace-nowrap">
-                    {INVITE.ceremonia.direccion}
-                  </p>
+              <SectionCard
+                bg={INVITE.colores.pastelCer}
+                title={INVITE.ceremonia.titulo}
+                iconAnim={ceremoniaAnim}
+                gradFrom={INVITE.colores.gradCerFrom}
+                gradTo={INVITE.colores.gradCerTo}
+              >
+                <p className="mt-1">{INVITE.ceremonia.fechaTexto}</p>
+                <p className="mt-2 text-lg sm:text-xl">
+                  {INVITE.ceremonia.lugar}
+                </p>
+                <p className="mt-1 whitespace-nowrap">
+                  {INVITE.ceremonia.direccion}
+                </p>
 
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      INVITE.ceremonia.mapsQuery
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block px-6 py-3 mt-4 text-base font-semibold text-white rounded-xl
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    INVITE.ceremonia.mapsQuery
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block px-6 py-3 mt-4 text-base font-semibold text-white rounded-xl
            transition-transform duration-200 lg:hover:-translate-y-[1px]"
-                    style={{ backgroundColor: INVITE.colores.rosaBtn }}
-                  >
-                    Ver Mapa
-                  </a>
-                </SectionCard>
-              </Reveal>
+                  style={{ backgroundColor: INVITE.colores.rosaBtn }}
+                >
+                  Ver Mapa
+                </a>
+              </SectionCard>
               {/* CELEBRACIÓN */}
-              <Reveal delay={30}>
-                <SectionCard
-                  bg={INVITE.colores.pastelCel}
-                  title={INVITE.celebracion.titulo}
-                  iconAnim={celebracionAnim}
-                  gradFrom={INVITE.colores.gradCelFrom}
-                  gradTo={INVITE.colores.gradCelTo}
-                  iconStyle={{
-                    transform: 'translateY(-6%) scale(0.86)', // sube un poquito y reduce apenas
-                    transformOrigin: 'center',
-                  }}
+              <SectionCard
+                bg={INVITE.colores.pastelCel}
+                title={INVITE.celebracion.titulo}
+                iconAnim={celebracionAnim}
+                gradFrom={INVITE.colores.gradCelFrom}
+                gradTo={INVITE.colores.gradCelTo}
+                iconStyle={{
+                  transform: 'translateY(-6%) scale(0.86)', // sube un poquito y reduce apenas
+                  transformOrigin: 'center',
+                }}
+              >
+                <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
+                <p className="mt-1 whitespace-nowrap">
+                  {INVITE.celebracion.direccion}
+                </p>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    INVITE.celebracion.mapsQuery
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block px-6 py-3 mt-4 text-base font-semibold text-white rounded-xl"
+                  style={{ backgroundColor: INVITE.colores.rosaBtn }}
                 >
-                  <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
-                  <p className="mt-1 whitespace-nowrap">
-                    {INVITE.celebracion.direccion}
-                  </p>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      INVITE.celebracion.mapsQuery
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block px-6 py-3 mt-4 text-base font-semibold text-white rounded-xl"
-                    style={{ backgroundColor: INVITE.colores.rosaBtn }}
-                  >
-                    Ver Mapa
-                  </a>
-                </SectionCard>
-              </Reveal>
+                  Ver Mapa
+                </a>
+              </SectionCard>
               {/* DRESS CODE */}
-              <Reveal delay={30}>
-                <SectionCard
-                  bg={INVITE.colores.pastelDress}
-                  title={INVITE.dress.titulo}
-                  iconAnim={dresscodeAnim}
-                  gradFrom={INVITE.colores.gradDressFrom}
-                  gradTo={INVITE.colores.gradDressTo}
-                >
-                  <p className="mt-2">{INVITE.dress.texto}</p>
-                </SectionCard>
-              </Reveal>
+              <SectionCard
+                bg={INVITE.colores.pastelDress}
+                title={INVITE.dress.titulo}
+                iconAnim={dresscodeAnim}
+                gradFrom={INVITE.colores.gradDressFrom}
+                gradTo={INVITE.colores.gradDressTo}
+              >
+                <p className="mt-2">{INVITE.dress.texto}</p>
+              </SectionCard>
             </div>
 
             {/* ==== SECCIÓN FINAL EN NEGATIVO FULL-BLEED ==== */}
