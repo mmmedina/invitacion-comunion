@@ -325,11 +325,11 @@ export default function Invitation() {
         color: INVITE.colores.primario,
       }}
     >
-      <div className="grid lg:grid-cols-2 h-auto lg:h-screen max-w-[1200px] mx-auto bg-white shadow-xl lg:rounded-2xl">
+      <div className="grid w-full h-auto bg-white shadow-xl lg:grid-cols-2 lg:h-screen">
         {/* PORTADA (sin cambios de tamaño) */}
         <section
           className="relative grid place-items-center h-[100svh] min-h-[560px] lg:min-h-0
-             lg:sticky lg:top-0 lg:h-screen lg:rounded-l-2xl overflow-hidden"
+             lg:sticky lg:top-0 lg:h-screen overflow-hidden"
           style={{
             background: `url('${INVITE.portada}') center/cover no-repeat`,
           }}
@@ -367,7 +367,7 @@ export default function Invitation() {
           </div>
 
           <div
-            className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 rounded-t-[18px]"
+            className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 rounded-t-[18px] lg:hidden"
             style={{ background: INVITE.colores.papel }}
           />
         </section>
