@@ -394,7 +394,9 @@ export default function Invitation() {
                 <p className="mt-2 text-lg sm:text-xl">
                   {INVITE.ceremonia.lugar}
                 </p>
-                <p className="mt-1">{INVITE.ceremonia.direccion}</p>
+                <p className="mt-1 whitespace-nowrap">
+                  {INVITE.ceremonia.direccion}
+                </p>
 
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
