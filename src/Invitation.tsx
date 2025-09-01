@@ -43,18 +43,14 @@ const INVITE = {
   },
   celebracion: {
     titulo: 'Celebración',
-    lugar: "Jano's Puerto Madero",
     fechaTexto: '14:30 P.M.',
     horaTexto: '14:30 P.M.',
-    direccion: 'Av. Libertad 456, Hurlingham',
+    direccion: 'Valentín Alsina 2834, Hurlingham',
     mapsQuery:
-      "Jano's Puerto Madero, Olga Cossettini 1031, C1107 Cdad. Autónoma de Buenos Aires",
+      'Valentín Alsina 2834, B1686 Hurlingham, Provincia de Buenos Aires',
   },
-  dress: {
-    titulo: 'Dress Code',
-    texto: 'Lucí tu mejor Look',
-  },
-  whatsapp: '5491164312028',
+  dress: { titulo: 'Dress Code', texto: 'Lucí tu mejor Look' },
+  whatsapp: '5491169214849',
 };
 
 // ===== helpers =====
@@ -426,9 +422,6 @@ export default function Invitation() {
                 }}
               >
                 <p className="mt-1">{INVITE.celebracion.fechaTexto}</p>
-                <p className="mt-2 text-lg sm:text-xl">
-                  {INVITE.celebracion.lugar}
-                </p>
                 <p className="mt-1">{INVITE.celebracion.direccion}</p>
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
