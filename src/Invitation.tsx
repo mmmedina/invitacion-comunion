@@ -264,11 +264,6 @@ const Divider: React.FC = () => (
   </div>
 );
 
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 export default function Invitation() {
   const fecha = useMemo(() => new Date(INVITE.fechaISO), []);
   const fechaBonita = useMemo(() => fechaLargaEs(fecha), [fecha]);
