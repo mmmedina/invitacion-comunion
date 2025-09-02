@@ -1,0 +1,46 @@
+// src/config/invite.ts
+export const INVITE = {
+  nombreNina: 'Sofía Paz',
+  titulo: 'Mi Primera Comunión',
+  fechaISO: '2025-09-13T12:00:00-03:00',
+  duracionMin: 60,
+  portada: '/Bautismo Chofi-31.jpg',
+  colores: {
+    fondo: '#fff7f9',
+    papel: '#fdeef3',
+    primario: '#b56576',
+    secundario: '#6d597a',
+    rosa: '#f4a6b7',
+    rosaBtn: '#ec4899',
+    rosaBtnHover: '#db2777',
+    gradCerFrom: '#f9a8d4',
+    gradCerTo: '#ec4899',
+    gradCelFrom: '#fbcfe8',
+    gradCelTo: '#d946ef',
+    gradDressFrom: '#c084fc',
+    gradDressTo: '#7c3aed',
+    pastelCer: 'rgba(255, 182, 193, 0.20)',
+    pastelCel: 'rgba(173, 216, 230, 0.20)',
+    pastelDress: 'rgba(221, 160, 221, 0.20)',
+    pastelBorder: 'rgba(0,0,0,0.06)',
+  },
+  ceremonia: {
+    titulo: 'Ceremonia',
+    lugar: 'Colegio San Fernando',
+    fechaTexto: '12:00 P.M.',
+    horaTexto: '12:00 P.M.',
+    direccion: 'Gral. Ricchieri 1425, Hurlingham',
+    mapsQuery:
+      'Colegio San Fernando, Tte. Gral. Pablo Ricchieri 1425, B1686 Hurlingham, Provincia de Buenos Aires',
+  },
+  celebracion: {
+    titulo: 'Celebración',
+    fechaTexto: '14:30 P.M.',
+    horaTexto: '14:30 P.M.',
+    direccion: 'Valentín Alsina 2834, Hurlingham',
+    mapsQuery:
+      'Valentín Alsina 2834, B1686 Hurlingham, Provincia de Buenos Aires',
+  },
+  dress: { titulo: 'Dress Code', texto: 'Lucí tu mejor Look' },
+  whatsapp: '5491169214849',
+} as const;
