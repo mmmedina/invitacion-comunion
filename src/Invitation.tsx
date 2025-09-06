@@ -4,6 +4,14 @@ import Lottie from 'lottie-react';
 import ceremoniaAnim from '../public/lotties/church.json';
 import celebracionAnim from '../public/lotties/confetti2.json';
 import dresscodeAnim from '../public/lotties/dress.json';
+import './App.css';
+
+const cssVar = (name: string) => {
+  const v = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+  return v;
+};
 
 // === CONFIG ===
 const INVITE = {
@@ -13,24 +21,24 @@ const INVITE = {
   duracionMin: 60,
   portada: '/Bautismo Chofi-31.jpg',
   colores: {
-    fondo: '#fff7f9',
-    papel: '#fdeef3',
-    primario: '#b56576',
-    secundario: '#6d597a',
-    rosa: '#f4a6b7',
-    rosaBtn: '#ec4899',
-    rosaBtnHover: '#db2777',
-    gradCerFrom: '#f9a8d4',
-    gradCerTo: '#ec4899',
-    gradCelFrom: '#fbcfe8',
-    gradCelTo: '#d946ef',
-    gradDressFrom: '#c084fc',
-    gradDressTo: '#7c3aed',
-    // pasteles súper suaves para los recuadros
-    pastelCer: 'rgba(255, 182, 193, 0.20)', // rosado muy tenue
-    pastelCel: 'rgba(173, 216, 230, 0.20)', // celeste muy tenue
-    pastelDress: 'rgba(221, 160, 221, 0.20)', // lavanda muy tenue
-    pastelBorder: 'rgba(0,0,0,0.06)',
+    fondo: cssVar('--c-fondo'),
+    papel: cssVar('--c-papel'),
+    primario: cssVar('--c-primario'),
+    secundario: cssVar('--c-secundario'),
+    rosa: cssVar('--c-rosa'),
+    rosaBtn: cssVar('--c-rosa-btn'),
+    rosaBtnHover: cssVar('--c-rosa-btn-hover'),
+    gradCerFrom: cssVar('--c-grad-cer-from'),
+    gradCerTo: cssVar('--c-grad-cer-to'),
+    gradCelFrom: cssVar('--c-grad-cel-from'),
+    gradCelTo: cssVar('--c-grad-cel-to'),
+    gradDressFrom: cssVar('--c-grad-dress-from'),
+    gradDressTo: cssVar('--c-grad-dress-to'),
+    pastelCer: cssVar('--c-pastel-cer'),
+    pastelCel: cssVar('--c-pastel-cel'),
+    pastelDress: cssVar('--c-pastel-dress'),
+    pastelBorder: cssVar('--c-pastel-border'),
+    darkSection: cssVar('--c-dark-section'),
   },
   ceremonia: {
     titulo: 'Ceremonia',
@@ -458,11 +466,8 @@ export default function Invitation() {
             <section
               className="mt-16 text-center py-12 px-6 rounded-none shadow-none mx-[-1.5rem]"
               style={{
-                backgroundColor: 'rgba(181, 101, 118, 0.85)',
+                backgroundColor: INVITE.colores.darkSection,
                 color: INVITE.colores.fondo,
-                backgroundImage:
-                  'radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)',
-                backgroundSize: '18px 18px',
               }}
             >
               <h3
