@@ -1,0 +1,154 @@
+/* 🌸 ROSAS (Rose + Lavender) */
+:root[data-theme='rosas'] {
+  --c-fondo: #fffcfd; /* casi blanco con leve rosa */
+  --c-papel: #fdeef3; /* papel rosa suave */
+  --c-section-bg: #fef6fb; /* fondo de secciones rosado blanquecino */
+
+  --c-primario: #b56576; /* rose dusty */
+  --c-secundario: #5a4b6b; /* lavender más oscuro para legibilidad */
+  --c-rosa: #f4a6b7;
+  --c-rosa-btn: #e76f8a;
+  --c-rosa-btn-hover: #6d28d9;
+
+  /* Gradientes */
+  --c-grad-cer-from: #f9bfd2;
+  --c-grad-cer-to: #e76f8a;
+  --c-grad-cel-from: #c7b6ff;
+  --c-grad-cel-to: #7c3aed;
+  --c-grad-dress-from: #f5c3d0;
+  --c-grad-dress-to: #a78bfa;
+
+  /* Pasteles y bordes */
+  --c-pastel-cer: rgba(248, 199, 214, 0.22);
+  --c-pastel-cel: rgba(199, 182, 255, 0.22);
+  --c-pastel-dress: rgba(226, 184, 235, 0.2);
+  --c-pastel-border: rgba(0, 0, 0, 0.06);
+
+  --c-dark-section: rgba(181, 101, 118, 0.85);
+}
+
+/* 💜 LAVANDA (Lavender + Blush) */
+:root[data-theme='lavanda'] {
+  --c-fondo: #fdfbff; /* casi blanco con tinte lavanda */
+  --c-papel: #f3edff; /* lila suave */
+  --c-section-bg: #f6fffb; /* mint pastel muy claro para secciones */
+
+  --c-primario: #7c3aed; /* lavanda medio */
+  --c-secundario: #3c2a70; /* púrpura oscuro para legibilidad */
+  --c-rosa: #c5b3ff; /* lavanda claro */
+  --c-rosa-btn: #10b981; /* mint vibrante */
+  --c-rosa-btn-hover: #059669; /* mint más oscuro */
+
+  /* Gradientes */
+  --c-grad-cer-from: #c4b5fd;
+  --c-grad-cer-to: #7c3aed;
+  --c-grad-cel-from: #d1fae5; /* mint claro */
+  --c-grad-cel-to: #10b981; /* mint medio */
+  --c-grad-dress-from: #f5e1ff; /* lila pastel */
+  --c-grad-dress-to: #9333ea; /* púrpura vibrante */
+
+  /* Pasteles */
+  --c-pastel-cer: rgba(196, 181, 253, 0.22); /* lila */
+  --c-pastel-cel: rgba(16, 185, 129, 0.2); /* mint */
+  --c-pastel-dress: rgba(229, 204, 255, 0.22); /* lila claro */
+  --c-pastel-border: rgba(0, 0, 0, 0.06);
+
+  --c-dark-section: rgba(60, 42, 112, 0.85); /* púrpura oscuro */
+}
+
+/* 🌱 PRADERA (Mint + Celeste pastel, menos empalagoso) */
+:root[data-theme='pradera'] {
+  --c-fondo: #f9fffb; /* casi blanco con tinte menta */
+  --c-papel: #f0faff; /* celeste muy claro en vez de tanto verde */
+  --c-section-bg: #fffdf6; /* durazno pastel pálido para secciones */
+
+  --c-primario: #2d6a4f; /* verde bosque */
+  --c-secundario: #1e3d2f; /* teal oscuro para legibilidad */
+  --c-rosa: #95d5b2; /* verde menta claro */
+  --c-rosa-btn: #3b82f6; /* azul pastel vibrante */
+  --c-rosa-btn-hover: #2563eb; /* azul un poco más fuerte */
+
+  /* Gradientes */
+  --c-grad-cer-from: #b7e4c7; /* verde menta */
+  --c-grad-cer-to: #74c69d;
+  --c-grad-cel-from: #c2e9fb; /* celeste suave */
+  --c-grad-cel-to: #3b82f6;
+  --c-grad-dress-from: #ffeec2; /* durazno pastel */
+  --c-grad-dress-to: #fbbf24;
+
+  /* Pasteles y bordes */
+  --c-pastel-cer: rgba(183, 228, 199, 0.24); /* verde */
+  --c-pastel-cel: rgba(125, 211, 252, 0.22); /* celeste */
+  --c-pastel-dress: rgba(255, 221, 170, 0.22); /* durazno */
+  --c-pastel-border: rgba(0, 0, 0, 0.06);
+
+  /* Sección final */
+  --c-dark-section: rgba(45, 106, 79, 0.8); /* verde bosque translúcido */
+}
+
+:root[data-theme='cerezo'] {
+  --c-fondo: #fffafa; /* casi blanco con leve tinte rosado */
+  --c-papel: #e8fbfb; /* aqua pastel muy suave en vez de tanto rosa */
+  --c-section-bg: #fff6f7; /* rosado pálido para secciones */
+
+  --c-primario: #e63946; /* coral rojo */
+  --c-secundario: #5e1a23; /* rojo vino oscuro, legible */
+  --c-rosa: #f28b82; /* coral claro */
+  --c-rosa-btn: #06b6d4; /* aqua vibrante */
+  --c-rosa-btn-hover: #0891b2; /* aqua más profundo */
+
+  /* Gradientes */
+  --c-grad-cer-from: #ffd6da; /* coral muy claro */
+  --c-grad-cer-to: #f28b82; /* coral medio */
+  --c-grad-cel-from: #c2f7f4; /* aqua pastel */
+  --c-grad-cel-to: #06b6d4; /* aqua medio */
+  --c-grad-dress-from: #ffe1e4; /* rosa claro */
+  --c-grad-dress-to: #e63946; /* coral intenso */
+
+  /* Pasteles y bordes */
+  --c-pastel-cer: rgba(242, 139, 130, 0.22); /* coral */
+  --c-pastel-cel: rgba(6, 182, 212, 0.22); /* aqua */
+  --c-pastel-dress: rgba(248, 200, 205, 0.22); /* coral pastel */
+  --c-pastel-border: rgba(0, 0, 0, 0.06);
+
+  /* Sección final */
+  --c-dark-section: rgba(94, 26, 35, 0.85); /* rojo vino translúcido */
+}
+
+/* 🎉 DIVERTIDA (Aqua + Violeta + Coral, más vibrante) */
+:root[data-theme='divertida'] {
+  /* Base */
+  --c-fondo: #fffdfc; /* fondo casi blanco cálido */
+  --c-papel: #f9f0ff; /* lila pastel muy suave */
+  --c-section-bg: #fef9f1; /* secciones durazno pastel muy claro */
+
+  /* Duo principal */
+  --c-primario: #ff80a6; /* rosa chicle pastel */
+  --c-secundario: #2c2a3e; /* violeta oscuro para legibilidad */
+
+  /* Texto */
+  --c-text: #3a354a; /* gris violeta oscuro */
+  --c-text-strong: #1e1b28; /* más oscuro para destacar */
+
+  /* Accentos/botones */
+  --c-rosa: #ffd966; /* amarillo pastel (candy) */
+  --c-rosa-btn: #7dd3fc; /* celeste pastel vibrante */
+  --c-rosa-btn-hover: #ff80a6; /* hover rosa chicle */
+
+  /* Gradientes */
+  --c-grad-cer-from: #fff2c2; /* rosa suave */
+  --c-grad-cer-to: #ffd966; /* rosa chicle */
+  --c-grad-cel-from: #ffd6e0; /* celeste muy claro */
+  --c-grad-cel-to: #ff80a6; /* celeste medio */
+  --c-grad-dress-from: #d6f7ff; /* amarillo pastel claro */
+  --c-grad-dress-to: #7dd3fc; /* amarillo pastel medio */
+
+  /* Pasteles */
+  --c-pastel-cer: rgba(255, 128, 166, 0.24); /* rosa chicle */
+  --c-pastel-cel: rgba(125, 211, 252, 0.22); /* celeste pastel */
+  --c-pastel-dress: rgba(255, 217, 102, 0.22); /* amarillo pastel */
+  --c-pastel-border: rgba(0, 0, 0, 0.06);
+
+  /* Sección final */
+  --c-dark-section: rgba(44, 42, 62, 0.5); /* violeta profundo translúcido */
+}

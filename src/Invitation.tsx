@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Lottie from 'lottie-react';
 
-import ceremoniaAnim from '../public/lotties/church.json';
-import celebracionAnim from '../public/lotties/confetti2.json';
-import dresscodeAnim from '../public/lotties/dress.json';
+import { useIcon } from './hooks/useIcon';
 import './App.css';
 
 const cssVar = (name: string) => {
@@ -237,7 +235,7 @@ const SectionCard: React.FC<{
   >
     <h3
       className="mb-4 text-5xl font-normal sm:text-6xl"
-      style={{ fontFamily: "'Great Vibes', cursive" }}
+      style={{ fontFamily: cssVar('--font-title') }}
     >
       {title}
     </h3>
@@ -297,13 +295,13 @@ export default function Invitation() {
           <div className="relative z-10 px-6 py-8 text-center text-white">
             <h1
               className="text-6xl"
-              style={{ fontFamily: "'Great Vibes', cursive" }}
+              style={{ fontFamily: cssVar('--font-title') }}
             >
               {INVITE.titulo}
             </h1>
             <p
               className="text-3xl tracking-wide"
-              style={{ fontFamily: "'Poppins', sans-serif" }}
+              style={{ fontFamily: cssVar('--font-body') }}
             >
               Sofía
             </p>
@@ -345,11 +343,11 @@ export default function Invitation() {
             <div
               className="max-w-[620px] mx-auto text-center
              text-[18px] sm:text-[19px] lg:text-[20px] leading-relaxed"
-              style={{ fontFamily: "'Poppins', sans-serif" }}
+              style={{ fontFamily: cssVar('--font-body') }}
             >
               <h2
                 className="text-5xl font-normal sm:text-6xl"
-                style={{ fontFamily: "'Great Vibes', cursive" }}
+                style={{ fontFamily: cssVar('--font-title') }}
               >
                 ¡Estás invitado!
               </h2>
@@ -366,7 +364,7 @@ export default function Invitation() {
               <div className="mt-8">
                 <div
                   className="text-4xl sm:text-5xl"
-                  style={{ fontFamily: "'Great Vibes', cursive" }}
+                  style={{ fontFamily: cssVar('--font-title') }}
                 >
                   Te espero el
                 </div>
@@ -397,7 +395,7 @@ export default function Invitation() {
               <SectionCard
                 bg={INVITE.colores.pastelCer}
                 title={INVITE.ceremonia.titulo}
-                iconAnim={ceremoniaAnim}
+                iconAnim={useIcon('ceremonia')}
                 gradFrom={INVITE.colores.gradCerFrom}
                 gradTo={INVITE.colores.gradCerTo}
               >
@@ -426,7 +424,7 @@ export default function Invitation() {
               <SectionCard
                 bg={INVITE.colores.pastelCel}
                 title={INVITE.celebracion.titulo}
-                iconAnim={celebracionAnim}
+                iconAnim={useIcon('celebracion')}
                 gradFrom={INVITE.colores.gradCelFrom}
                 gradTo={INVITE.colores.gradCelTo}
                 iconStyle={{
@@ -454,7 +452,7 @@ export default function Invitation() {
               <SectionCard
                 bg={INVITE.colores.pastelDress}
                 title={INVITE.dress.titulo}
-                iconAnim={dresscodeAnim}
+                iconAnim={useIcon('dress')}
                 gradFrom={INVITE.colores.gradDressFrom}
                 gradTo={INVITE.colores.gradDressTo}
               >
@@ -472,7 +470,7 @@ export default function Invitation() {
             >
               <h3
                 className="text-5xl font-normal sm:text-6xl"
-                style={{ fontFamily: "'Great Vibes', cursive" }}
+                style={{ fontFamily: cssVar('--font-title') }}
               >
                 ¡Te espero!
               </h3>

@@ -1,0 +1,32 @@
+/* 🎩 clásica: script elegante + sans moderna (lo que ya usás) */
+:root[data-font='clasica'] {
+  --font-title: 'Great Vibes', cursive;
+  --font-body: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* ✒️ editorial: serif display + serif legible */
+:root[data-font='editorial'] {
+  --font-title: 'Playfair Display', ui-serif, Georgia, serif;
+  --font-body: 'Lora', ui-serif, Georgia, serif;
+}
+
+/* 🧼 moderna: sans geométrica + sans neutral */
+:root[data-font='moderna'] {
+  --font-title: 'Montserrat', ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, sans-serif;
+}
+
+/* 😊 amable: redondeadas y cálidas */
+:root[data-font='amable'] {
+  --font-title: 'Quicksand', ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, sans-serif;
+  --font-body: 'Nunito', ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, sans-serif;
+}
+
+:root[data-font='dulce'] {
+  --font-title: 'Pacifico', cursive; /* títulos redondeados y juguetones */
+  --font-body: 'Baloo 2', cursive, sans-serif; /* textos amables y legibles */
+}
